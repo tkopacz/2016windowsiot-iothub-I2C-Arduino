@@ -2,9 +2,11 @@
 
 // the setup function runs once when you press reset or power the board
 void setup() {
+  Serial.begin(9600);
   Wire.onReceive(receiveEvent); //Zgłaszane przy wysyłaniu (nadawca: Write)
   Wire.onRequest(requestEvent); //Zgłaszane przy żądaniu odczytu (nadawca: Read)
   Wire.begin(18); //Jesteśmy slave numer 18
+  Serial.println("SLAVE 18");
 }
 
 // the loop function runs over and over again until power down or reset
@@ -23,6 +25,7 @@ void loop() { }
 byte arr[2];
 int sum=0;
 void receiveEvent(int howMany) {  //Odebranie I2C, howMany - ile bajtów
+    Serial.println("receiveEvent");
     sum = 0;
     while (Wire.available() > 0){
         byte b = Wire.read();
@@ -31,6 +34,7 @@ void receiveEvent(int howMany) {  //Odebranie I2C, howMany - ile bajtów
 }
 
 void requestEvent() {
+    Serial.println("requestEvent");
     arr[0] = sum & 0xFF;
     arr[1] = (sum>>8)& 0xFF; 
     Wire.write(arr,sizeof(arr));
